@@ -70,8 +70,8 @@ app.use('/api', (req, res, next) => {
 
 app.options('*', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', [
-    'http://localhost:5173',  // Local development URL
-    'https://beyond-chats-sooty.vercel.app' , // Correct Vercel frontend URL
+    'http://localhost:5173',
+    'https://beyond-chats-sooty.vercel.app' ,
     'https://beyond-chats-jjlr0mklx-akanksha-dubeys-projects.vercel.app'
   ]);
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -93,11 +93,11 @@ app.get('/api/auth/google',
 
 app.get('/api/auth/google/callback',
   passport.authenticate('google', {
-    failureRedirect: 'https://beyond-chats-sooty.vercel.app/login',  // Updated failure redirect URL
+    failureRedirect: 'https://beyond-chats-sooty.vercel.app/login',  
     session: true
   }),
   (req, res) => {
-    res.redirect('https://beyond-chats-sooty.vercel.app/organization-setup');  // Updated success redirect URL
+    res.redirect('https://beyond-chats-sooty.vercel.app/organization-setup');  
   }
 );
 
