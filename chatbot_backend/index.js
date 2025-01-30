@@ -267,7 +267,10 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173',  // Development frontend URL (for local development)
+    'https://beyond-chats-pi.vercel.app'  // Production frontend URL (Vercel)
+  ],
   credentials: true
 }));
 
@@ -276,10 +279,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
     httpOnly: true,
     sameSite: 'lax',
-    maxAge: 24 * 60 * 60 * 1000
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
 
