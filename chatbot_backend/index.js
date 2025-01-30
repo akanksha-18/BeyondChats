@@ -254,53 +254,114 @@
 //   res.status(500).json({ message: 'Something went wrong!' });
 // });
 
-require('dotenv').config();
+// require('dotenv').config();
+// const express = require('express');
+// const cors = require('cors');
+// const mongoose = require('mongoose');
+// const passport = require('passport');
+// const session = require('express-session');
+// const authRoutes = require('./routes/authRoutes');
+// require('./config/passport');  
+
+// const app = express();
+
+// // Middleware
+// app.use(cors({
+//   origin: [
+//     'https://beyond-chats-lpicnjh5o-akanksha-dubeys-projects.vercel.app',
+//     // Add any other allowed origins (like your local development URL)
+//     'http://localhost:5173'
+//   ],
+//   credentials: true
+// }));
+
+// app.use(session({
+//   secret: process.env.SESSION_SECRET || 'your-secret-key',
+//   resave: false,
+//   saveUninitialized: false,
+//   cookie: {
+//     secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+//     httpOnly: true,
+//     sameSite: 'lax',
+//     maxAge: 24 * 60 * 60 * 1000 // 24 hours
+//   }
+// }));
+
+// app.use(express.json());
+// app.use(passport.initialize());
+// app.use(passport.session());
+
+// // MongoDB Connection
+// mongoose.connect(process.env.MONGO_URI, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true
+// })
+// .then(() => console.log('MongoDB connected'))
+// .catch(err => console.error('MongoDB connection error:', err));
+
+// // Use routes
+// app.use('/api', authRoutes);
+
+// // Start server
+// const PORT = process.env.PORT || 3001;
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
-const authRoutes = require('./routes/authRoutes');
-require('./config/passport');  
+const MongoStore = require('connect-mongo');
+require('dotenv').config();
+require('./config/passport');
 
 const app = express();
 
-// Middleware
-app.use(cors({
-  origin: [
-    'http://localhost:5173',  // Development frontend URL (for local development)
-    'https://beyond-chats-bz3txjpm6-akanksha-dubeys-projects.vercel.app'  // Production frontend URL (Vercel)
-  ],
-  credentials: true
-}));
+// Database connection
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
+// Middleware
+const corsOptions = {
+  origin: [
+    'https://beyond-chats-lpicnjh5o-akanksha-dubeys-projects.vercel.app',
+    'http://localhost:5173'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Session configuration
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'your-secret-key',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({ 
+    mongoUrl: process.env.MONGODB_URI,
+    collectionName: 'sessions'
+  }),
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-    httpOnly: true,
-    sameSite: 'lax',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    secure: true,
+    sameSite: 'none',
+    maxAge: 24 * 60 * 60 * 1000
   }
 }));
 
-app.use(express.json());
+// Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
+// Routes
+app.use('/api', require('./routes/authRoutes'));
 
-// Use routes
-app.use('/api', authRoutes);
-
-// Start server
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
