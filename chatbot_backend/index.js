@@ -269,7 +269,7 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:5173',  // Development frontend URL (for local development)
-    'https://beyond-chats-pi.vercel.app'  // Production frontend URL (Vercel)
+    'https://beyond-chats-bz3txjpm6-akanksha-dubeys-projects.vercel.app'  // Production frontend URL (Vercel)
   ],
   credentials: true
 }));
