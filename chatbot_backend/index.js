@@ -59,6 +59,7 @@ app.use(cors({
 app.use('/api', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', [
     'http://localhost:5173',  // Local development URL
+    'https://beyond-chats-jjlr0mklx-akanksha-dubeys-projects.vercel.app'
     'https://beyond-chats-sooty.vercel.app'  // Correct Vercel frontend URL
   ]);
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -70,7 +71,8 @@ app.use('/api', (req, res, next) => {
 app.options('*', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', [
     'http://localhost:5173',  // Local development URL
-    'https://beyond-chats-sooty.vercel.app'  // Correct Vercel frontend URL
+    'https://beyond-chats-sooty.vercel.app' , // Correct Vercel frontend URL
+    'https://beyond-chats-jjlr0mklx-akanksha-dubeys-projects.vercel.app'
   ]);
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
