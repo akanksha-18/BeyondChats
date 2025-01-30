@@ -306,7 +306,6 @@
 // const PORT = process.env.PORT || 3001;
 // app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -318,10 +317,13 @@ require('./config/passport');
 
 const app = express();
 
-// Database connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+// Database connection - keep only one of these
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log('MongoDB connected'))
+.catch(err => console.error('MongoDB connection error:', err));
 
 // Middleware
 const corsOptions = {
@@ -357,13 +359,7 @@ app.use(session({
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
-  
+
 // Routes
 app.use('/api', require('./routes/authRoutes'));
 
