@@ -268,6 +268,7 @@ const app = express();
 // Middleware
 const corsOptions = {
   origin: [
+    'https://beyond-chats-dgrz3lfys-akanksha-dubeys-projects.vercel.app',
     'https://beyond-chats-okjna0tap-akanksha-dubeys-projects.vercel.app',
     'http://localhost:5173'
   ],
