@@ -254,76 +254,16 @@
 //   res.status(500).json({ message: 'Something went wrong!' });
 // });
 
-// require('dotenv').config();
-// const express = require('express');
-// const cors = require('cors');
-// const mongoose = require('mongoose');
-// const passport = require('passport');
-// const session = require('express-session');
-// const authRoutes = require('./routes/authRoutes');
-// require('./config/passport');  
-
-// const app = express();
-
-// // Middleware
-// app.use(cors({
-//   origin: [
-//     'https://beyond-chats-lpicnjh5o-akanksha-dubeys-projects.vercel.app',
-//     // Add any other allowed origins (like your local development URL)
-//     'http://localhost:5173'
-//   ],
-//   credentials: true
-// }));
-
-// app.use(session({
-//   secret: process.env.SESSION_SECRET || 'your-secret-key',
-//   resave: false,
-//   saveUninitialized: false,
-//   cookie: {
-//     secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-//     httpOnly: true,
-//     sameSite: 'lax',
-//     maxAge: 24 * 60 * 60 * 1000 // 24 hours
-//   }
-// }));
-
-// app.use(express.json());
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-// // MongoDB Connection
-// mongoose.connect(process.env.MONGO_URI, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true
-// })
-// .then(() => console.log('MongoDB connected'))
-// .catch(err => console.error('MongoDB connection error:', err));
-
-// // Use routes
-// app.use('/api', authRoutes);
-
-// // Start server
-// const PORT = process.env.PORT || 3001;
-// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
-const MongoStore = require('connect-mongo');
-require('dotenv').config();
-require('./config/passport');
+const authRoutes = require('./routes/authRoutes');
+require('./config/passport');  
 
 const app = express();
-
-// Database connection - keep only one of these
-mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
 
 // Middleware
 const corsOptions = {
@@ -337,33 +277,34 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Session configuration
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({ 
-    mongoUrl: process.env.MONGODB_URI,
-    collectionName: 'sessions'
-  }),
   cookie: {
-    secure: true,
-    sameSite: 'none',
-    maxAge: 24 * 60 * 60 * 1000
+    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+    httpOnly: true,
+    sameSite: 'lax',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
 
-// Passport middleware
+app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Routes
-app.use('/api', require('./routes/authRoutes'));
+// MongoDB Connection
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('MongoDB connected'))
+.catch(err => console.error('MongoDB connection error:', err));
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Use routes
+app.use('/api', authRoutes);
+
+// Start server
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
