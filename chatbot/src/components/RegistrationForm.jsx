@@ -45,7 +45,7 @@ const RegistrationForm = () => {
     setMessage('');
 
     try {
-      const res = await fetch('http://localhost:3001/api/send-verification', {
+      const res = await fetch('https://beyondchats-55cv.onrender.com/api/send-verification', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -96,7 +96,7 @@ const RegistrationForm = () => {
         payload.name = formData.name;
       }
 
-      const res = await fetch(`http://localhost:3001${endpoint}`, {
+      const res = await fetch(`https://beyondchats-55cv.onrender.com${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -123,7 +123,7 @@ const RegistrationForm = () => {
   };
 
   const handleGoogleSignup = () => {
-    window.location.href = 'http://localhost:3001/api/auth/google';
+    window.location.href = 'https://beyondchats-55cv.onrender.com/api/auth/google';
   };
 
   return (
