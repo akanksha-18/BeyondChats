@@ -54,6 +54,21 @@ app.use(cors({
   ],
   credentials: true
 }));
+app.use('/api', (req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://beyond-chats-h6wggr6ep-akanksha-dubeys-projects.vercel.app');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
+app.options('*', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://beyond-chats-h6wggr6ep-akanksha-dubeys-projects.vercel.app');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.sendStatus(200);
+});
+
 app.use(express.json());
 app.use(session({ secret: 'your-secret-key', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
