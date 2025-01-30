@@ -1,0 +1,30 @@
+.bubbles-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+    z-index: -1;
+  }
+  
+  .bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    animation: bubbleAnimation 6s infinite;
+  }
+  
+  @keyframes bubbleAnimation {
+    0% {
+      transform: translateY(100vh) scale(0.5);
+    }
+    50% {
+      transform: translateY(-100vh) scale(1);
+    }
+    100% {
+      transform: translateY(100vh) scale(0.5);
+    }
+  }
+  
