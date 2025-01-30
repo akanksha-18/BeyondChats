@@ -278,6 +278,20 @@ const corsOptions = {
   preflightContinue: false,
   optionsSuccessStatus: 204
 };
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (corsOptions.origin.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin, Accept');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
 
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
@@ -286,9 +300,9 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+    secure: true, // Required for cross-origin cookies
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: 'none', // Required for cross-origin cookies
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));

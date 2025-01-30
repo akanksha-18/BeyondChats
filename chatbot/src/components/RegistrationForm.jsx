@@ -47,11 +47,16 @@ const RegistrationForm = () => {
     try {
       const res = await fetch('https://beyondchats-55cv.onrender.com/api/send-verification', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ 
-          email: formData.email,
-          isLogin: isLogin 
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Origin': window.location.origin
+      },
+      credentials: 'include',
+      mode: 'cors',
+      body: JSON.stringify({ 
+        email: formData.email,
+        isLogin: isLogin 
         }),
       });
 
