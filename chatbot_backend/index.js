@@ -50,19 +50,28 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:5173',  // Local development URL
-    'https://beyond-chats-duwgr94d9-akanksha-dubeys-projects.vercel.app'  // Production frontend URL
+    'https://beyond-chats-sooty.vercel.app'  // Correct Vercel frontend URL
   ],
   credentials: true
 }));
+
+// Set headers for API routes
 app.use('/api', (req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://beyond-chats-h6wggr6ep-akanksha-dubeys-projects.vercel.app');
+  res.setHeader('Access-Control-Allow-Origin', [
+    'http://localhost:5173',  // Local development URL
+    'https://beyond-chats-sooty.vercel.app'  // Correct Vercel frontend URL
+  ]);
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
+
 app.options('*', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://beyond-chats-h6wggr6ep-akanksha-dubeys-projects.vercel.app');
+  res.setHeader('Access-Control-Allow-Origin', [
+    'http://localhost:5173',  // Local development URL
+    'https://beyond-chats-sooty.vercel.app'  // Correct Vercel frontend URL
+  ]);
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -75,18 +84,18 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/api/auth/google',
-  passport.authenticate('google', { 
+  passport.authenticate('google', {
     scope: ['profile', 'email']
   })
 );
 
-app.get('/api/auth/google/callback', 
-  passport.authenticate('google', { 
-    failureRedirect: 'https://beyond-chats-duwgr94d9-akanksha-dubeys-projects.vercel.app/login',  // Update failure redirect URL
+app.get('/api/auth/google/callback',
+  passport.authenticate('google', {
+    failureRedirect: 'https://beyond-chats-sooty.vercel.app/login',  // Updated failure redirect URL
     session: true
   }),
   (req, res) => {
-    res.redirect('https://beyond-chats-duwgr94d9-akanksha-dubeys-projects.vercel.app/organization-setup');  // Update success redirect URL
+    res.redirect('https://beyond-chats-sooty.vercel.app/organization-setup');  // Updated success redirect URL
   }
 );
 
