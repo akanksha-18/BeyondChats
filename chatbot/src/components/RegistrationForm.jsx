@@ -45,7 +45,7 @@ const RegistrationForm = () => {
     setMessage('');
 
     try {
-      const res = await fetch('https://beyondchats-55cv.onrender.com/api/send-verification', {
+      const res = await fetch('https://beyondchats-55cv.onrender.com/send-verification', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
