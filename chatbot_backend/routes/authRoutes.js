@@ -46,11 +46,11 @@ router.get('/auth/google', passport.authenticate('google', {
 
 router.get('/auth/google/callback', 
   passport.authenticate('google', { 
-    failureRedirect: 'https://beyond-chats-pi.vercel.app/login', 
+    failureRedirect: 'https://beyondchats-iplg6bnqv-akanksha-dubeys-projects.vercel.app/login', 
     session: true
   }),
   (req, res) => {
-    res.redirect('https://beyond-chats-pi.vercel.app/organization-setup'); 
+    res.redirect('https://beyondchats-iplg6bnqv-akanksha-dubeys-projects.vercel.app/organization-setup'); 
   }
 );
 
