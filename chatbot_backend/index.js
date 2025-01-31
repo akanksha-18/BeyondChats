@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const session = require('express-session');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const { sendVerificationEmail } = require('./config/email');
+const { sendVerificationEmail } = require('./utils/email');
 
 const app = express();
 
