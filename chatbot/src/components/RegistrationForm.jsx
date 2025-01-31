@@ -162,10 +162,10 @@ const RegistrationForm = () => {
         body: JSON.stringify(payload),
       });
   
-      // Log the full response for debugging
+      
       console.log('Response status:', res.status);
       
-      // Handle non-JSON responses
+    
       const contentType = res.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
         throw new Error(`Server returned ${res.status}: Not a JSON response`);
