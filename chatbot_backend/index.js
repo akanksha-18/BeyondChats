@@ -50,7 +50,8 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173',
   'https://beyond-chats-sooty.vercel.app',
-  'https://beyond-chats-jjlr0mklx-akanksha-dubeys-projects.vercel.app'
+  'https://beyond-chats-jjlr0mklx-akanksha-dubeys-projects.vercel.app',
+  'https://beyondchats-cr91.onrender.com'
 ];
 
 // CORS middleware with dynamic origin checking
