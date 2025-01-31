@@ -36,33 +36,124 @@ const RegistrationForm = () => {
     return true;
   };
 
+  // const handleSendVerification = async (e) => {
+  //   e.preventDefault();
+  //   if (!validateForm()) return;
+
+  //   setLoading(true);
+  //   setError('');
+  //   setMessage('');
+
+  //   try {
+  //     const res = await fetch('https://beyondchats-cr91.onrender.com/api/send-verification', {
+  //       method: 'POST',
+  //     headers: { 
+  //       'Content-Type': 'application/json',
+  //       'Accept': 'application/json',
+  //       'Origin': window.location.origin
+  //     },
+  //     credentials: 'include',
+  //     mode: 'cors',
+  //     body: JSON.stringify({ 
+  //       email: formData.email,
+  //       isLogin: isLogin 
+  //       }),
+  //     });
+
+  //     const data = await res.json();
+  //     console.log('Verification response:', data);
+
+  //     if (res.ok) {
+  //       setMessage(data.message || 'Verification code sent successfully!');
+  //       setStep('verification');
+  //       setIsLogin(data.isExistingUser);
+  //     } else {
+  //       setError(data.message || 'Failed to send verification code.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Verification error:', error);
+  //     setError('Failed to send verification code. Please try again.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // const handleVerifyAndProceed = async (e) => {
+  //   e.preventDefault();
+  //   if (!verificationCode) {
+  //     setError('Please enter the verification code.');
+  //     return;
+  //   }
+
+  //   setLoading(true);
+  //   setError('');
+  //   setMessage('');
+
+  //   try {
+  //     const endpoint = isLogin ? '/api/login' : '/api/register';
+  //     const payload = {
+  //       email: formData.email,
+  //       password: formData.password,
+  //       verificationCode: verificationCode
+  //     };
+
+  //     if (!isLogin) {
+  //       payload.name = formData.name;
+  //     }
+
+  //     const res = await fetch(`https://beyondchats-cr91.onrender.com${endpoint}`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       credentials: 'include',
+  //       body: JSON.stringify(payload),
+  //     });
+
+  //     const data = await res.json();
+
+  //     if (res.ok) {
+  //       setMessage(isLogin ? 'Login successful!' : 'Registration successful!');
+  //       localStorage.setItem('userEmail', formData.email);
+  //       setTimeout(() => {
+  //         navigate('/organization-setup');
+  //       }, 1500);
+  //     } else {
+  //       setError(data.message || (isLogin ? 'Login failed.' : 'Registration failed.'));
+  //     }
+  //   } catch (error) {
+  //     console.error('Auth error:', error);
+  //     setError('An error occurred. Please try again.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  
+  
+
   const handleSendVerification = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
+  
     setLoading(true);
     setError('');
     setMessage('');
-
+  
     try {
       const res = await fetch('https://beyondchats-cr91.onrender.com/api/send-verification', {
         method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Origin': window.location.origin
-      },
-      credentials: 'include',
-      mode: 'cors',
-      body: JSON.stringify({ 
-        email: formData.email,
-        isLogin: isLogin 
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ 
+          email: formData.email,
+          isLogin: isLogin 
         }),
       });
-
+  
       const data = await res.json();
       console.log('Verification response:', data);
-
+  
       if (res.ok) {
         setMessage(data.message || 'Verification code sent successfully!');
         setStep('verification');
@@ -77,57 +168,65 @@ const RegistrationForm = () => {
       setLoading(false);
     }
   };
-
+  
   const handleVerifyAndProceed = async (e) => {
     e.preventDefault();
     if (!verificationCode) {
       setError('Please enter the verification code.');
       return;
     }
-
+  
     setLoading(true);
     setError('');
     setMessage('');
-
+  
     try {
-      const endpoint = isLogin ? '/api/login' : '/api/register';
+      // Use verify endpoints instead of login/register directly
+      const endpoint = isLogin ? '/api/verify-login' : '/api/verify-registration';
       const payload = {
         email: formData.email,
         password: formData.password,
-        verificationCode: verificationCode
+        verificationCode: verificationCode.trim(), // Trim any whitespace
+        ...(isLogin ? {} : { name: formData.name })
       };
-
-      if (!isLogin) {
-        payload.name = formData.name;
-      }
-
+  
+      console.log('Sending verification payload:', payload); // For debugging
+  
       const res = await fetch(`https://beyondchats-cr91.onrender.com${endpoint}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         credentials: 'include',
         body: JSON.stringify(payload),
       });
-
+  
+      // Log the full response for debugging
+      console.log('Response status:', res.status);
       const data = await res.json();
-
+      console.log('Verification response data:', data);
+  
       if (res.ok) {
         setMessage(isLogin ? 'Login successful!' : 'Registration successful!');
         localStorage.setItem('userEmail', formData.email);
+        // Add user data to localStorage if provided by the server
+        if (data.user) {
+          localStorage.setItem('userData', JSON.stringify(data.user));
+        }
         setTimeout(() => {
           navigate('/organization-setup');
         }, 1500);
       } else {
-        setError(data.message || (isLogin ? 'Login failed.' : 'Registration failed.'));
+        throw new Error(data.message || (isLogin ? 'Login failed.' : 'Registration failed.'));
       }
     } catch (error) {
       console.error('Auth error:', error);
-      setError('An error occurred. Please try again.');
+      setError(error.message || 'An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
   };
-  
-  
   const handleGoogleSignup = () => {
     window.location.href = 'https://beyondchats-cr91.onrender.com/api/auth/google';
   };
