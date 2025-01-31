@@ -181,16 +181,16 @@ const RegistrationForm = () => {
     setMessage('');
   
     try {
-      // Use verify endpoints instead of login/register directly
-      const endpoint = isLogin ? '/api/verify-login' : '/api/verify-registration';
+      // Use the original login/register endpoints since that's what your server expects
+      const endpoint = isLogin ? '/api/login' : '/api/register';
       const payload = {
         email: formData.email,
         password: formData.password,
-        verificationCode: verificationCode.trim(), // Trim any whitespace
+        verificationCode: verificationCode.trim(),
         ...(isLogin ? {} : { name: formData.name })
       };
   
-      console.log('Sending verification payload:', payload); // For debugging
+      console.log('Sending verification payload:', payload);
   
       const res = await fetch(`https://beyondchats-cr91.onrender.com${endpoint}`, {
         method: 'POST',
@@ -204,13 +204,19 @@ const RegistrationForm = () => {
   
       // Log the full response for debugging
       console.log('Response status:', res.status);
+      
+      // Handle non-JSON responses
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error(`Server returned ${res.status}: Not a JSON response`);
+      }
+  
       const data = await res.json();
-      console.log('Verification response data:', data);
+      console.log('Response data:', data);
   
       if (res.ok) {
         setMessage(isLogin ? 'Login successful!' : 'Registration successful!');
         localStorage.setItem('userEmail', formData.email);
-        // Add user data to localStorage if provided by the server
         if (data.user) {
           localStorage.setItem('userData', JSON.stringify(data.user));
         }
@@ -222,7 +228,11 @@ const RegistrationForm = () => {
       }
     } catch (error) {
       console.error('Auth error:', error);
-      setError(error.message || 'An error occurred. Please try again.');
+      setError(
+        error.message === 'Failed to fetch' 
+          ? 'Unable to connect to the server. Please try again.'
+          : error.message || 'An error occurred. Please try again.'
+      );
     } finally {
       setLoading(false);
     }
