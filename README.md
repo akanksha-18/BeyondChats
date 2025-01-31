@@ -1,4 +1,4 @@
-# Project Name
+# BeyondChats
 
 ## Description
 This project implements Google authentication using Node.js, Express, and MongoDB. Users can log in using their Google account, and their authentication status is managed through sessions.
