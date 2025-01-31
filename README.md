@@ -2,7 +2,9 @@
 
 ## Description
 This project implements Google authentication using Node.js, Express, and MongoDB. Users can log in using their Google account, and their authentication status is managed through sessions.
-
+## Deployment
+- Hosted Link: [Live App](https://beyond-chats-sooty.vercel.app/register)
+- backend link: [Live App](https://beyondchats-cr91.onrender.com)
 ## Features
 - Google OAuth authentication
 - Express-based backend with MongoDB integration
@@ -51,9 +53,6 @@ This project implements Google authentication using Node.js, Express, and MongoD
 - `GET /api/auth/google` - Initiates Google OAuth login
 - `GET /api/auth/google/callback` - Handles Google OAuth response
 
-## Deployment
-- Hosted Link: [Live App](https://beyond-chats-sooty.vercel.app/register)
-- Ensure environment variables are set correctly on Render
 
 ## Troubleshooting
 - If `Invalid or expired verification code` occurs, ensure:
